@@ -1,0 +1,4 @@
+# Raspberry Pi Sense HAT Server Requirements
+sense-hat>=2.6.0
+websockets>=10.0
+pyyaml>=6.0

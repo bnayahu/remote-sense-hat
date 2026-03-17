@@ -1,0 +1,11 @@
+{
+  "domain": "remote_sense_hat",
+  "name": "Remote Sense HAT",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/yourusername/remote-sense-hat",
+  "iot_class": "local_push",
+  "requirements": [],
+  "version": "1.0.0"
+}

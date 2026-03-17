@@ -1,0 +1,26 @@
+# Sense HAT Server Configuration
+
+server:
+  host: "0.0.0.0"  # Listen on all interfaces
+  port: 8765       # WebSocket port
+
+display:
+  brightness: 0.5  # Default brightness (0.0 - 1.0)
+  rotation: 0      # Default rotation (0, 90, 180, 270)
+
+sensors:
+  enabled: true
+  update_interval: 60  # Seconds between sensor updates
+  temperature_offset: -5.0  # Calibration offset in °C (Sense HAT runs warm)
+  
+  # Optional: Data smoothing
+  smoothing:
+    enabled: true
+    window_size: 5  # Number of readings to average
+
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: /var/log/sense-hat-server.log
+  console: true  # Also log to console
+
+# Made with Bob

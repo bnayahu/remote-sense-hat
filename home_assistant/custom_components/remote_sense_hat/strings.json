@@ -1,0 +1,33 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Remote Sense HAT Setup",
+        "description": "Configure connection to your Raspberry Pi Sense HAT server",
+        "data": {
+          "host": "Raspberry Pi IP Address",
+          "port": "WebSocket Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the Sense HAT server. Please check the IP address and port.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This Sense HAT server is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Remote Sense HAT Options",
+        "description": "Configure options for your Sense HAT",
+        "data": {
+          "host": "Raspberry Pi IP Address",
+          "port": "WebSocket Port"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+[Unit]
+Description=Sense HAT WebSocket Server
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/opt/sense-hat-server
+ExecStart=/usr/bin/python3 /opt/sense-hat-server/sense_hat_server.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,162 @@
+display_text:
+  name: Display Text
+  description: Display scrolling text on the Sense HAT LED matrix
+  fields:
+    text:
+      name: Text
+      description: Text to display
+      required: true
+      example: "Hello World!"
+      selector:
+        text:
+    scroll_speed:
+      name: Scroll Speed
+      description: Speed of text scrolling in seconds per character
+      default: 0.1
+      example: 0.1
+      selector:
+        number:
+          min: 0.01
+          max: 1.0
+          step: 0.01
+          mode: slider
+    text_color:
+      name: Text Color
+      description: RGB color for text [r, g, b]
+      default: [255, 255, 255]
+      example: [255, 0, 0]
+      selector:
+        object:
+    back_color:
+      name: Background Color
+      description: RGB color for background [r, g, b]
+      default: [0, 0, 0]
+      example: [0, 0, 255]
+      selector:
+        object:
+
+set_pixel:
+  name: Set Pixel
+  description: Set the color of a single pixel
+  fields:
+    x:
+      name: X Coordinate
+      description: X coordinate (0-7)
+      required: true
+      example: 3
+      selector:
+        number:
+          min: 0
+          max: 7
+          mode: box
+    y:
+      name: Y Coordinate
+      description: Y coordinate (0-7)
+      required: true
+      example: 4
+      selector:
+        number:
+          min: 0
+          max: 7
+          mode: box
+    color:
+      name: Color
+      description: RGB color [r, g, b]
+      required: true
+      example: [0, 255, 0]
+      selector:
+        object:
+
+set_pixels:
+  name: Set All Pixels
+  description: Set all 64 pixels at once
+  fields:
+    pixels:
+      name: Pixels
+      description: Array of 64 RGB colors
+      required: true
+      example: "[[255,0,0], [0,255,0], ...]"
+      selector:
+        object:
+
+clear:
+  name: Clear Display
+  description: Clear the LED display
+  fields:
+    color:
+      name: Color
+      description: Optional RGB color to fill [r, g, b]
+      default: [0, 0, 0]
+      example: [0, 0, 255]
+      selector:
+        object:
+
+show_image:
+  name: Show Image
+  description: Display a predefined image or pattern
+  fields:
+    image_name:
+      name: Image Name
+      description: Name of the predefined image
+      required: true
+      example: "heart"
+      selector:
+        select:
+          options:
+            - "heart"
+            - "smile"
+            - "check"
+            - "cross"
+            - "arrow_up"
+            - "arrow_down"
+    rotation:
+      name: Rotation
+      description: Rotation angle in degrees
+      default: 0
+      example: 90
+      selector:
+        select:
+          options:
+            - 0
+            - 90
+            - 180
+            - 270
+
+set_brightness:
+  name: Set Brightness
+  description: Set the display brightness
+  fields:
+    brightness:
+      name: Brightness
+      description: Brightness level (0.0 - 1.0)
+      required: true
+      example: 0.5
+      selector:
+        number:
+          min: 0.0
+          max: 1.0
+          step: 0.1
+          mode: slider
+
+set_rotation:
+  name: Set Rotation
+  description: Set the display rotation
+  fields:
+    rotation:
+      name: Rotation
+      description: Rotation angle in degrees
+      required: true
+      example: 90
+      selector:
+        select:
+          options:
+            - 0
+            - 90
+            - 180
+            - 270
+
+update_sensors:
+  name: Update Sensors
+  description: Force an immediate sensor data update
+
+# Made with Bob
