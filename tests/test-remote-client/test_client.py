@@ -83,18 +83,29 @@ class SenseHatTestClient:
         try:
             await self.ws.send(json.dumps({"type": "get_sensors"}))
             
-            # Wait for response
-            response = await asyncio.wait_for(self.ws.recv(), timeout=5.0)
-            result = json.loads(response)
-            
-            if result.get('type') == 'sensor_data':
-                data = result.get('data', {})
-                print("✓ Sensor data received:")
-                print(f"  Temperature: {data.get('temperature')}°C")
-                print(f"  Humidity: {data.get('humidity')}%")
-                print(f"  Pressure: {data.get('pressure')} hPa")
-            else:
-                print(f"  Response: {result}")
+            # Wait for response - may need to skip non-sensor responses
+            max_attempts = 3
+            for attempt in range(max_attempts):
+                response = await asyncio.wait_for(self.ws.recv(), timeout=5.0)
+                result = json.loads(response)
+                
+                if result.get('type') == 'sensor_data':
+                    data = result.get('data', {})
+                    print("✓ Sensor data received:")
+                    print(f"  Temperature: {data.get('temperature')}°C")
+                    print(f"  Humidity: {data.get('humidity')}%")
+                    print(f"  Pressure: {data.get('pressure')} hPa")
+                    return
+                elif result.get('type') == 'error':
+                    print(f"✗ Error: {result.get('message')}")
+                    return
+                else:
+                    # Got a different response type, try again
+                    print(f"  Skipping response: {result}")
+                    if attempt < max_attempts - 1:
+                        continue
+                    else:
+                        print("✗ Did not receive sensor data after multiple attempts")
                 
         except asyncio.TimeoutError:
             print("✗ Request timeout")
@@ -157,6 +168,7 @@ async def run_tests(host: str, port: int):
     
     # Test 6: Get sensor data
     await client.get_sensors()
+    await asyncio.sleep(1)
     
     # Test 7: Final clear
     await client.send_command("clear", {})

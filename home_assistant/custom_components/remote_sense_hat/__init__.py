@@ -250,6 +250,9 @@ class SenseHatClient:
             # Wait for welcome message
             await asyncio.sleep(0.5)
             
+            # Request initial sensor data
+            await self.request_sensor_update()
+            
         except Exception as err:
             _LOGGER.error("Failed to connect to Sense HAT server: %s", err)
             await self._cleanup()
@@ -304,9 +307,10 @@ class SenseHatClient:
                 self.available_images = message.get("available_images", [])
                 _LOGGER.debug("Received welcome message")
             
-            elif msg_type == "sensor_update":
+            elif msg_type == "sensor_update" or msg_type == "sensor_data":
+                # Handle both periodic updates and direct responses
                 self.sensor_data = message.get("data", {})
-                _LOGGER.debug("Received sensor update: %s", self.sensor_data)
+                _LOGGER.debug("Received sensor data: %s", self.sensor_data)
                 # Notify sensor entities
                 self.hass.bus.async_fire(
                     f"{DOMAIN}_sensor_update",
