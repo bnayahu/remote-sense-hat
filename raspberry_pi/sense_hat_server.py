@@ -311,6 +311,18 @@ class SenseHatServer:
         async with websockets.serve(self.handle_client, host, port):
             logger.info("Server started successfully")
             
+            # Show green checkmark on successful initialization
+            try:
+                self.display.show_image("check")
+                logger.info("Displaying initialization success indicator")
+                
+                # Clear display after 2 seconds
+                await asyncio.sleep(2)
+                self.display.clear()
+                logger.info("Cleared initialization indicator")
+            except Exception as e:
+                logger.error(f"Error displaying initialization indicator: {e}")
+            
             # Keep server running
             while self.running:
                 await asyncio.sleep(1)
