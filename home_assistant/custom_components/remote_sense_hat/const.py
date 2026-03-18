@@ -38,6 +38,11 @@ ATTR_COLOR = "color"
 ATTR_PIXELS = "pixels"
 ATTR_IMAGE_NAME = "image_name"
 
+# Light entity
+LIGHT_ENTITY_ID = "led_matrix"
+DEFAULT_BRIGHTNESS = 128  # 0-255 scale
+DEFAULT_RGB_COLOR = (255, 255, 255)
+
 # Sensor types
 SENSOR_TEMPERATURE = "temperature"
 SENSOR_HUMIDITY = "humidity"

@@ -41,7 +41,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[Platform] = [Platform.SENSOR]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.LIGHT]
 
 # Service schemas
 SERVICE_DISPLAY_TEXT_SCHEMA = vol.Schema(

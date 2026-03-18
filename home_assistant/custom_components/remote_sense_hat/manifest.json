@@ -7,5 +7,5 @@
   "documentation": "https://github.com/bnayahu/remote-sense-hat",
   "iot_class": "local_push",
   "requirements": [],
-  "version": "1.0.0"
+  "version": "1.1.0"
 }

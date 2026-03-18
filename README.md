@@ -9,6 +9,7 @@ This project provides a complete solution for controlling a Raspberry Pi Sense H
 ## Features
 
 - 🔌 **WebSocket Communication**: Real-time, low-latency control
+- 💡 **Light Entity**: Control LED matrix as a native Home Assistant light
 - 📝 **Text Display**: Scroll text messages with customizable colors and speed
 - 🎨 **Pixel Control**: Set individual pixels or entire display patterns
 - 🖼️ **Image Library**: Display predefined icons and patterns
@@ -37,7 +38,36 @@ This project provides a complete solution for controlling a Raspberry Pi Sense H
 └─────────────────────┘                            └──────────────────────┘
 ```
 
-## Sensor Data
+## Entities
+
+### Light Entity: LED Matrix
+
+The 8x8 LED matrix is exposed as a native Home Assistant light entity (`light.sense_hat_led_matrix`), providing:
+
+- **On/Off Control**: Turn the display on or off
+- **Brightness**: Adjust display brightness (0-100%)
+- **RGB Color**: Set solid colors across the entire display
+- **Effects**: Display predefined images/patterns (heart, smile, check, cross, arrows)
+
+**Example Usage:**
+```yaml
+# Turn on with a solid blue color
+service: light.turn_on
+target:
+  entity_id: light.sense_hat_led_matrix
+data:
+  brightness: 200
+  rgb_color: [0, 0, 255]
+
+# Show a heart effect
+service: light.turn_on
+target:
+  entity_id: light.sense_hat_led_matrix
+data:
+  effect: "heart"
+```
+
+### Sensor Entities
 
 The Sense HAT includes environmental sensors that are automatically exposed to Home Assistant:
 
@@ -111,7 +141,42 @@ cp -r home_assistant/custom_components/remote_sense_hat custom_components/
 
 ## Usage Examples
 
-### Display Text
+### Using the Light Entity
+
+The light entity provides simple, intuitive control for basic operations:
+
+```yaml
+# Turn on with default white color
+service: light.turn_on
+target:
+  entity_id: light.sense_hat_led_matrix
+
+# Set a specific color and brightness
+service: light.turn_on
+target:
+  entity_id: light.sense_hat_led_matrix
+data:
+  brightness: 150
+  rgb_color: [255, 100, 0]  # Orange
+
+# Show a predefined effect
+service: light.turn_on
+target:
+  entity_id: light.sense_hat_led_matrix
+data:
+  effect: "check"
+
+# Turn off the display
+service: light.turn_off
+target:
+  entity_id: light.sense_hat_led_matrix
+```
+
+### Using Services for Advanced Control
+
+For more complex operations like scrolling text and pixel manipulation, use the dedicated services:
+
+#### Display Text
 
 ```yaml
 service: remote_sense_hat.display_text
@@ -122,7 +187,7 @@ data:
   back_color: [0, 0, 0]    # Black
 ```
 
-### Set Individual Pixel
+#### Set Individual Pixel
 
 ```yaml
 service: remote_sense_hat.set_pixel
@@ -132,7 +197,7 @@ data:
   color: [0, 255, 0]  # Green
 ```
 
-### Clear Display
+#### Clear Display
 
 ```yaml
 service: remote_sense_hat.clear
@@ -140,7 +205,7 @@ data:
   color: [0, 0, 255]  # Blue background
 ```
 
-### Show Predefined Image
+#### Show Predefined Image
 
 ```yaml
 service: remote_sense_hat.show_image
@@ -149,7 +214,31 @@ data:
   rotation: 0
 ```
 
-### Automation Example
+### Automation Examples
+
+#### Using Light Entity in Automation
+
+```yaml
+automation:
+  - alias: "Notification Indicator"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.front_door
+        to: "on"
+    action:
+      - service: light.turn_on
+        target:
+          entity_id: light.sense_hat_led_matrix
+        data:
+          effect: "check"
+          brightness: 255
+      - delay: "00:00:03"
+      - service: light.turn_off
+        target:
+          entity_id: light.sense_hat_led_matrix
+```
+
+#### Using Services in Automation
 
 ```yaml
 automation:
