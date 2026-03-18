@@ -61,14 +61,13 @@ class SenseHatServer:
                 smoothing_window=smoothing_config.get('window_size', 5)
             )
             
-            self.periodic_sensor = PeriodicSensorReader(
-                sensor_reader=self.sensor_reader,
-                update_interval=sensor_config.get('update_interval', 60),
-                callback=self._on_sensor_update
-            )
+            # Note: PeriodicSensorReader will be initialized in start() with event loop
+            self.periodic_sensor = None
+            self.sensor_update_interval = sensor_config.get('update_interval', 60)
         else:
             self.sensor_reader = None
             self.periodic_sensor = None
+            self.sensor_update_interval = None
         
         logger.info("Sense HAT server initialized")
     
@@ -302,8 +301,15 @@ class SenseHatServer:
         
         self.running = True
         
-        # Start periodic sensor reader if enabled
-        if self.periodic_sensor:
+        # Initialize periodic sensor reader with event loop if enabled
+        if self.sensor_reader and self.sensor_update_interval:
+            loop = asyncio.get_running_loop()
+            self.periodic_sensor = PeriodicSensorReader(
+                sensor_reader=self.sensor_reader,
+                update_interval=self.sensor_update_interval,
+                callback=self._on_sensor_update,
+                event_loop=loop
+            )
             self.periodic_sensor.start()
         
         logger.info(f"Starting WebSocket server on {host}:{port}")

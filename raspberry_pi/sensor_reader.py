@@ -3,8 +3,9 @@ Sensor Reader for Raspberry Pi Sense HAT
 Handles periodic sensor data collection with smoothing
 """
 
+import asyncio
 import logging
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Callable
 from collections import deque
 from sense_hat import SenseHat
 import threading
@@ -146,7 +147,8 @@ class PeriodicSensorReader:
         self,
         sensor_reader: SensorReader,
         update_interval: int = 60,
-        callback=None
+        callback: Optional[Callable] = None,
+        event_loop: Optional[asyncio.AbstractEventLoop] = None
     ):
         """
         Initialize periodic sensor reader
@@ -154,11 +156,13 @@ class PeriodicSensorReader:
         Args:
             sensor_reader: SensorReader instance
             update_interval: Seconds between readings
-            callback: Optional callback function for sensor updates
+            callback: Optional callback function for sensor updates (can be async)
+            event_loop: Event loop for scheduling async callbacks
         """
         self.sensor_reader = sensor_reader
         self.update_interval = update_interval
         self.callback = callback
+        self.event_loop = event_loop
         
         self.running = False
         self.thread: Optional[threading.Thread] = None
@@ -195,7 +199,18 @@ class PeriodicSensorReader:
                 
                 # Call callback if provided
                 if self.callback:
-                    self.callback(data)
+                    if asyncio.iscoroutinefunction(self.callback):
+                        # Schedule async callback in the event loop
+                        if self.event_loop and self.event_loop.is_running():
+                            asyncio.run_coroutine_threadsafe(
+                                self.callback(data),
+                                self.event_loop
+                            )
+                        else:
+                            logger.warning("Event loop not available for async callback")
+                    else:
+                        # Call sync callback directly
+                        self.callback(data)
                 
                 # Wait for next interval
                 time.sleep(self.update_interval)
